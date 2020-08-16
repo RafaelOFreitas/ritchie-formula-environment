@@ -34,7 +34,7 @@ runFormula() {
     installDiscord
     installVsCode
     installJdk
-    installGit
+    installGit $GIT_NAME $GIT_EMAIL
     installMaven
     installDocker
     installIntellij
@@ -52,8 +52,8 @@ runFormula() {
 }
 
 sayHello() {
-  echo "sudo apt install lolcat -y"
-  echo "sudo apt install cowsay -y"
+  echo sudo apt install lolcat -y
+  echo sudo apt install cowsay -y
 
   cowsay -f gnu Configurando ambiente com RITCHIE! 🦸🚀 | lolcat
 
@@ -64,7 +64,7 @@ sayHello() {
 installSPropertiesCommon() {
   start "Iniciando instalação de Properties Common"
 
-  echo "sudo apt install software-properties-common -y >/dev/null"
+  echo sudo apt install software-properties-common -y >/dev/null
 
   finish "Instalação de Properties Common Concluída"
 }
@@ -72,7 +72,13 @@ installSPropertiesCommon() {
 installWget() {
   start "Iniciando instalação do GNU Wget"
 
-  echo "sudo apt install apt-transport-https wget -y >/dev/null"
+  checkIfIsInstalled "wget"
+  if [ $? -eq 1 ]; then
+    echo "${YELLOW}⚠️  GNU Wget já está instalado!"
+    return
+  fi
+
+  echo sudo apt install apt-transport-https wget -y >/dev/null
 
   finish "Instalação do GNU Wget Concluída"
 }
@@ -80,7 +86,7 @@ installWget() {
 installCertificates() {
   start "Iniciando instalação de Certificados"
 
-  echo "sudo apt install ca-certificates -y >/dev/null"
+  echo sudo apt install ca-certificates -y >/dev/null
 
   finish "Instalação de Certificados Concluída"
 }
@@ -88,7 +94,13 @@ installCertificates() {
 installCurl() {
   start "Iniciando instalação do Curl Wget"
 
-  echo "sudo apt install curl -y >/dev/null"
+  checkIfIsInstalled "curl"
+  if [ $? -eq 1 ]; then
+    echo "${YELLOW}⚠️  Curl já está instalado!"
+    return
+  fi
+
+  echo sudo apt install curl -y >/dev/null
 
   finish "Instalação do Curl Concluída"
 }
@@ -96,7 +108,7 @@ installCurl() {
 installGnupgAgent() {
   start "Iniciando instalação do GNUPG Agent"
 
-  echo "sudo apt install gnupg-agent -y >/dev/null"
+  echo sudo apt install gnupg-agent -y >/dev/null
 
   finish "Instalação do GNUPG Concluída"
 }
@@ -104,7 +116,13 @@ installGnupgAgent() {
 installSnap() {
   start "Iniciando instalação do Snap"
 
-  echo "sudo apt install snapd -y >/dev/null"
+  checkIfIsInstalled "snap"
+  if [ $? -eq 1 ]; then
+    echo "${YELLOW}⚠️  Snap já está instalado!"
+    return
+  fi
+
+  echo sudo apt install snapd -y >/dev/null
 
   finish "Instalação do Snap Concluída"
 }
@@ -112,7 +130,16 @@ installSnap() {
 installGit() {
   start "Iniciando instalação do Git"
 
-  echo "sudo apt install git -y >/dev/null"
+  checkIfIsInstalled "git"
+  if [ $? -eq 1 ]; then
+    echo "${YELLOW}⚠️  Git já está instalado!"
+    return
+  fi
+
+  echo sudo apt install git -y >/dev/null
+
+  echo git config --global user.name "$1"
+  echo git config --global user.email "$2"
 
   finish "Instalação do Git Concluída"
 }
@@ -120,8 +147,8 @@ installGit() {
 installIntellij() {
   start "Iniciando instalação do IntelliJ IDEA"
 
-  echo "sudo add-apt-repository ppa:ubuntuhandbook1/apps"
-  echo "sudo apt update -qq"
+  echo sudo add-apt-repository ppa:ubuntuhandbook1/apps
+  echo sudo apt update -qq
 
   echo -e "\n${LIME_YELLOW}Selecione a versão do IntelliJ a ser instalado:"
 
@@ -130,12 +157,12 @@ installIntellij() {
   select opt in "${options[@]}"; do
     case $opt in
     "Community")
-      echo "sudo apt-get install intellij-idea-community -y"
+      echo sudo apt-get install intellij-idea-community -y
       finish "Instalação do IntelliJ IDEA Community Concluída"
       break
       ;;
     "Ultimate")
-      echo "sudo apt-get install intellij-idea-ultimate -y"
+      echo sudo apt-get install intellij-idea-ultimate -y
       finish "Instalação do IntelliJ IDEA Ultimate Concluída"
       break
       ;;
@@ -151,9 +178,9 @@ installIntellij() {
 installJdk() {
   start "Iniciando instalação do JDK"
 
-  echo "sudo add-apt-repository ppa:ubuntuhandbook1/apps >/dev/null"
+  echo sudo add-apt-repository ppa:ubuntuhandbook1/apps >/dev/null
 
-  echo "sudo apt update -qq"
+  echo sudo apt update -qq
 
   echo -e "\n${LIME_YELLOW}Selecione a versão do Openjdk a ser instalado:"
 
@@ -162,17 +189,17 @@ installJdk() {
   select opt in "${options[@]}"; do
     case $opt in
     "8")
-      echo "sudo apt install openjdk-8-jdk -y"
+      echo sudo apt install openjdk-8-jdk -y
       finish "Instalação do JDK Concluída"
       break
       ;;
     "11")
-      echo "sudo apt install openjdk-11-jdk -y"
+      echo sudo apt install openjdk-11-jdk -y
       finish "Instalação do JDK Concluída"
       break
       ;;
     "12")
-      echo "sudo apt install openjdk-12-jdk -y"
+      echo sudo apt install openjdk-12-jdk -y
       finish "Instalação do JDK Concluída"
       break
       ;;
@@ -188,7 +215,13 @@ installJdk() {
 installMaven() {
   start "Iniciando instalação do Maven"
 
-  echo "sudo apt install maven -y"
+  checkIfIsInstalled "mvn"
+  if [ $? -eq 1 ]; then
+    echo "${YELLOW}⚠️  Maven já está instalado!"
+    return
+  fi
+
+  echo sudo apt install maven -y
 
   finish "Instalação do Maven Concluída"
 }
@@ -196,11 +229,17 @@ installMaven() {
 installDocker() {
   start "Adicionando chave GPG oficial do Docker"
 
-  echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"
+  checkIfIsInstalled "docker"
+  if [ $? -eq 1 ]; then
+    echo "${YELLOW}⚠️  Docker já está instalado!"
+    return
+  fi
 
   start "Iniciando instalação do Docker"
 
-  echo "sudo apt-get install docker-ce docker-ce-cli containerd.io"
+  echo sudo apt install docker.io
+  echo sudo systemctl start docker
+  echo sudo systemctl enable docker
 
   finish "Instalação do Docker Concluída"
 }
@@ -208,12 +247,18 @@ installDocker() {
 installVsCode() {
   start "Iniciando instalação do Visual Studio Code"
 
-  echo "wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -"
-  echo "sudo add-apt-repository deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
-  echo "sudo apt install code -y"
+  checkIfIsInstalled "code"
+  if [ $? -eq 1 ]; then
+    echo "${YELLOW}⚠️  Visual Studio Code já está instalado!"
+    return
+  fi
 
-  echo "sudo apt update -qq"
-  echo "sudo apt upgrade -qq"
+  echo wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
+  echo sudo add-apt-repository deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+  echo sudo apt install code -y
+
+  echo sudo apt update -qq
+  echo sudo apt upgrade -qq
 
   finish "Instalação do Visual Studio Code Concluída"
 }
@@ -221,7 +266,13 @@ installVsCode() {
 installPostaman() {
   start "Iniciando instalação do Postman"
 
-  echo "sudo snap install postman -y >/dev/null"
+  checkIfIsInstalled "postman"
+  if [ $? -eq 1 ]; then
+    echo "${YELLOW}⚠️  Postman já está instalado!"
+    return
+  fi
+
+  echo sudo snap install postman -y >/dev/null
 
   finish "Instalação do Postman Concluída"
 }
@@ -229,7 +280,13 @@ installPostaman() {
 installMySql() {
   start "Iniciando instalação do MySql"
 
-  echo "sudo apt-get install mysql-server mysql-client -y"
+  checkIfIsInstalled "mysql"
+  if [ $? -eq 1 ]; then
+    echo "${YELLOW}⚠️  MySql já está instalado!"
+    return
+  fi
+
+  echo sudo apt-get install mysql-server mysql-client -y
 
   finish "Instalação do MySql Server Concluída"
 }
@@ -237,7 +294,7 @@ installMySql() {
 installMySqlWorkbench() {
   start "Iniciando instalação do MySql Workbench"
 
-  echo "sudo apt install mysql-workbench -y>/dev/null"
+  echo sudo apt install mysql-workbench -y >/dev/null
 
   finish "Instalação do MySql Workbench Concluída"
 }
@@ -245,8 +302,8 @@ installMySqlWorkbench() {
 installChrome() {
   start "Iniciando instalação do Google Chrome"
 
-  echo "wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb >/dev/null"
-  echo "sudo dpkg -i google-chrome-stable_current_amd64.deb >/dev/null"
+  echo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb >/dev/null
+  echo sudo dpkg -i google-chrome-stable_current_amd64.deb >/dev/null
 
   finish "Instalação do Google Chrome Concluída"
 }
@@ -254,7 +311,13 @@ installChrome() {
 installSpotify() {
   start "Iniciando instalação do Spotify"
 
-  echo "snap install spotify >/dev/null"
+  checkIfIsInstalled "spotify"
+  if [ $? -eq 1 ]; then
+    echo "${YELLOW}⚠️  Spotify já está instalado!"
+    return
+  fi
+
+  echo snap install spotify >/dev/null
 
   finish "Instalação do Spotify Concluída"
 }
@@ -262,9 +325,23 @@ installSpotify() {
 installDiscord() {
   start "Iniciando instalação do Discord"
 
-  echo "sudo snap install discord >/dev/null"
+  checkIfIsInstalled "discord"
+  if [ $? -eq 1 ]; then
+    echo "${YELLOW}⚠️  Discord já está instalado!"
+    return
+  fi
+
+  echo sudo snap install discord >/dev/null
 
   finish "Instalação do Discord Concluída"
+}
+
+checkIfIsInstalled() {
+  if ! command -v $1 >/dev/null; then
+    return 0
+  else
+    return 1
+  fi
 }
 
 start() {
@@ -290,8 +367,8 @@ finish() {
 }
 
 finishInstall() {
-  echo "sudo apt update -qq"
-  echo "sudo apt upgrade -qq"
+  echo sudo apt update -qq
+  echo sudo apt upgrade -qq
 
   ufw enable
   echo "Repositorio Atualizado."

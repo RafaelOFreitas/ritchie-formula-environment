@@ -6,4 +6,4 @@
 
 #In sh for receive inputs of CLI use: $SAMPLE_TEXT, $SAMPLE_LIST and $SAMPLE_BOOL for this example
 
-runFormula "$SAMPLE_LIST"
+runFormula "$SAMPLE_LIST", "$GIT_NAME", "$GIT_EMAIL"
