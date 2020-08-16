@@ -3,7 +3,7 @@
 ## command
 
 ```bash
-rit ambiente create
+rit ambiente create dev
 ```
 
 ## description
