@@ -1,0 +1,15 @@
+{
+  "dockerImageBuilder": "cimg/base:stable-20.04",
+  "inputs": [
+    {
+      "default": "in1",
+      "items": [
+        "Configuração completa",
+        "Selecionar programas"
+      ],
+      "label": "Pick your : ",
+      "name": "sample_list",
+      "type": "text"
+    }
+  ]
+}
