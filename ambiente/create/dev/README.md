@@ -22,6 +22,9 @@ Formula para automatizar a configuração de ambientes de desenvolvimento.
 + Discord
 + VsCode
 + Jdk
++ Node
++ Python
++ Npm
 + Git
 + Maven
 + Docker

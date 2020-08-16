@@ -33,6 +33,9 @@ runFormula() {
     installSpotify
     installDiscord
     installVsCode
+    installPython
+    installNode
+    installNpm
     installJdk
     installGit $GIT_NAME $GIT_EMAIL
     installMaven
@@ -173,6 +176,49 @@ installIntellij() {
     *) echo -e "${RED}Opção inválida, tente novamente!" ;;
     esac
   done
+}
+
+installPython() {
+  start "Iniciando instalação do Python3"
+
+  checkIfIsInstalled "python3"
+  if [ $? -eq 1 ]; then
+    echo "${YELLOW}⚠️  Python3 já está instalado!"
+    return
+  fi
+
+  echo sudo add-apt-repository ppa:deadsnakes/ppa
+  echo sudo apt install python3.8
+
+  finish "Instalação do Python3 Concluída"
+}
+
+installNode() {
+  start "Iniciando instalação do Node"
+
+  checkIfIsInstalled "node"
+  if [ $? -eq 1 ]; then
+    echo "${YELLOW}⚠️  Node já está instalado!"
+    return
+  fi
+
+  echo sudo apt install nodejs
+
+  finish "Instalação do Node Concluída"
+}
+
+installNpm() {
+  start "Iniciando instalação do Npm"
+
+  checkIfIsInstalled "npm"
+  if [ $? -eq 1 ]; then
+    echo "${YELLOW}⚠️  Npm já está instalado!"
+    return
+  fi
+
+  echo sudo apt install npm -y
+
+  finish "Instalação do Npm Concluída"
 }
 
 installJdk() {
@@ -370,7 +416,7 @@ finishInstall() {
   echo sudo apt update -qq
   echo sudo apt upgrade -qq
 
-  ufw enable
+  echo sudo ufw enable
   echo "Repositorio Atualizado."
   echo "Sistema Atualizado."
   echo "Programas instalados."
