@@ -17,18 +17,18 @@ Formula para automatizar a configuração de ambientes de desenvolvimento.
 + Curl
 + Gnupg Agent
 + Snap
-+ Chrome
-+ Spotify
-+ Discord
-+ VsCode
 + Jdk
-+ Node
 + Python
++ Node
 + Npm
++ VsCode
 + Git
 + Maven
 + Docker
 + Intellij
-+ Postaman
++ Postman
 + MySql
 + MySql Workbench
++ Chrome
++ Spotify
++ Discord
