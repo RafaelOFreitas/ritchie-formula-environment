@@ -3,20 +3,20 @@
   "inputs": [
     {
       "items": [
-        "Configuração completa",
-        "Selecionar programas"
+        "Complete configuration",
+        "Select programs"
       ],
-      "label": "Pick your : ",
-      "name": "sample_list",
+      "label": "Choose which type of installation you want to do: ",
+      "name": "CONFIGURATION",
       "type": "text"
     },
     {
-      "label": "User name GIT : ",
+      "label": "Username GIT: ",
       "name": "GIT_NAME",
       "type": "text"
     },
     {
-      "label": "Email GIT : ",
+      "label": "Email GIT: ",
       "name": "GIT_EMAIL",
       "type": "text"
     }

@@ -17,127 +17,129 @@ REVERSE=$(tput smso)
 UNDERLINE=$(tput smul)
 
 runConfigLinux() {
-    echo $SAMPLE_LIST
-
     sayHello
 
-    case $SAMPLE_LIST in
-    "Configuração completa")
-        installSPropertiesCommon
-        installWget
-        installCertificates
-        installCurl
-        installGnupgAgent
-        installSnap
-        installJdk
-        installPython
-        installNode
-        installNpm
-        installVsCode
-        installGit $GIT_NAME $GIT_EMAIL
-        installMaven
-        installDocker
-        installIntellij
-        installPostman
-        installMySql
-        installMySqlWorkbench
-        installChrome
-        installSpotify
-        installDiscord
-
-        finishInstall
+    case $CONFIGURATION in
+    "Complete configuration")
+        completeConfiguration $GIT_NAME $GIT_EMAIL
         ;;
-    "Selecionar programas")
-        echo "Selecionar"
+    "Select programs")
+        echo "Select"
         ;;
-    *) echo -e "${RED}Opção inválida, tente novamente!" ;;
+    *) echo -e "${RED}Invalid option, try again!" ;;
     esac
+}
+
+completeConfiguration() {
+    installSPropertiesCommon
+    installWget
+    installCertificates
+    installCurl
+    installGnupgAgent
+    installSnap
+    installJdk
+    installPython
+    installNode
+    installNpm
+    installVsCode
+    installGit $GIT_NAME $GIT_EMAIL
+    installMaven
+    installDocker
+    installIntellij
+    installPostman
+    installMySql
+    installMySqlWorkbench
+    installChrome
+    installSpotify
+    installDiscord
+
+    finishInstall
 }
 
 sayHello() {
     echo sudo apt install lolcat -y
     echo sudo apt install cowsay -y
 
-    cowsay -f gnu Configurando ambiente com RITCHIE! 🦸🚀 | lolcat
+    cowsay -f gnu Setting up environment with RITCHIE! 🦸🚀 | lolcat
 
-    printf "\n${GREEN}Versão do SO: %s\n"
+    printf "\n${GREEN}OS version: %s\n"
     lsb_release -r
 }
 
 installSPropertiesCommon() {
-    start "Iniciando instalação de Properties Common"
+    start "Starting installation of Properties Common"
 
     echo sudo apt install software-properties-common -y >/dev/null
 
-    finish "Instalação de Properties Common Concluída"
+    finish "Properties Common installation complete"
 }
 
 installWget() {
-    start "Iniciando instalação do GNU Wget"
+    start "Starting installation of GNU Wget"
 
     checkIfIsInstalled "wget"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  GNU Wget já está instalado!"
+        echo "${YELLOW}⚠️  GNU Wget is already installed!"
         return
     fi
 
     echo sudo apt install apt-transport-https wget -y >/dev/null
 
-    finish "Instalação do GNU Wget Concluída"
+    finish "GNU Wget installation completed"
 }
 
 installCertificates() {
-    start "Iniciando instalação de Certificados"
+    start "Starting installation of Certificates"
 
     echo sudo apt install ca-certificates -y >/dev/null
 
-    finish "Instalação de Certificados Concluída"
+    finish "Certificate Installation Complete"
 }
 
 installCurl() {
-    start "Iniciando instalação do Curl Wget"
+    start "Starting installation of Curl Wget"
 
     checkIfIsInstalled "curl"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Curl já está instalado!"
+        echo "${YELLOW}⚠️  Curl is already installed!"
         return
     fi
 
     echo sudo apt install curl -y >/dev/null
 
-    finish "Instalação do Curl Concluída"
+    finish "Curl Installation Complete"
 }
 
 installGnupgAgent() {
-    start "Iniciando instalação do GNUPG Agent"
+    start "Starting installation of the GNUPG Agent"
 
     echo sudo apt install gnupg-agent -y >/dev/null
 
-    finish "Instalação do GNUPG Concluída"
+    finish "GNUPG installation completed"
 }
 
 installSnap() {
-    start "Iniciando instalação do Snap"
+    start "Starting Snap installation"
 
     checkIfIsInstalled "snap"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Snap já está instalado!"
+        echo "${YELLOW}⚠️  Snap is already installed!"
         return
     fi
 
     echo sudo apt install snapd -y >/dev/null
 
-    finish "Instalação do Snap Concluída"
+    finish "Snap Installation Complete"
 }
 
 installJdk() {
-    start "Iniciando instalação do JDK"
+    start "Starting JDK installation"
 
     echo sudo add-apt-repository ppa:ubuntuhandbook1/apps >/dev/null
 
     echo sudo apt update -qq
 
-    echo -e "\n${LIME_YELLOW}Selecione a versão do Openjdk a ser instalado:"
+    echo -e "\n${LIME_YELLOW}Select the version of Openjdk to be installed:"
 
     options=("8" "11" "12" "Quit")
 
@@ -145,77 +147,77 @@ installJdk() {
         case $opt in
         "8")
             echo sudo apt install openjdk-8-jdk -y
-            finish "Instalação do JDK Concluída"
+            finish "JDK 8 installation completed"
             break
             ;;
         "11")
             echo sudo apt install openjdk-11-jdk -y
-            finish "Instalação do JDK Concluída"
+            finish "JDK 11 installation completed"
             break
             ;;
         "12")
             echo sudo apt install openjdk-12-jdk -y
-            finish "Instalação do JDK Concluída"
+            finish "JDK 12 installation completed"
             break
             ;;
         "Quit")
-            echo -e "${RED}[ ✘️ ] JDK não instalado!"
+            echo -e "${RED}[ ✘️ ] JDK not installed!"
             break
             ;;
-        *) echo -e "${RED}Opção inválida, tente novamente!" ;;
+        *) echo -e "${RED}Invalid option, try again!" ;;
         esac
     done
 }
 
 installPython() {
-    start "Iniciando instalação do Python3"
+    start "Starting Python3 installation"
 
     checkIfIsInstalled "python3"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Python3 já está instalado!"
+        echo "${YELLOW}⚠️  Python3 is already installed!"
         return
     fi
 
     echo sudo add-apt-repository ppa:deadsnakes/ppa
     echo sudo apt install python3.8
 
-    finish "Instalação do Python3 Concluída"
+    finish "Python3 installation completed"
 }
 
 installNode() {
-    start "Iniciando instalação do Node"
+    start "Starting Node installation"
 
     checkIfIsInstalled "node"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Node já está instalado!"
+        echo "${YELLOW}⚠️  Node is already installed!"
         return
     fi
 
     echo sudo apt install nodejs
 
-    finish "Instalação do Node Concluída"
+    finish "Node installation complete"
 }
 
 installNpm() {
-    start "Iniciando instalação do Npm"
+    start "Starting Npm installation"
 
     checkIfIsInstalled "npm"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Npm já está instalado!"
+        echo "${YELLOW}⚠️  Npm is already installed!"
         return
     fi
 
     echo sudo apt install npm -y
 
-    finish "Instalação do Npm Concluída"
+    finish "Npm Installation Complete"
 }
 
 installVsCode() {
-    start "Iniciando instalação do Visual Studio Code"
+    start "Starting Visual Studio Code installation"
 
     checkIfIsInstalled "code"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Visual Studio Code já está instalado!"
+        echo "${YELLOW}⚠️  Visual Studio Code is already installed!"
         return
     fi
 
@@ -226,15 +228,15 @@ installVsCode() {
     echo sudo apt update -qq
     echo sudo apt upgrade -qq
 
-    finish "Instalação do Visual Studio Code Concluída"
+    finish "Visual Studio Code installation complete"
 }
 
 installGit() {
-    start "Iniciando instalação do Git"
+    start "Starting Git installation"
 
     checkIfIsInstalled "git"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Git já está instalado!"
+        echo "${YELLOW}⚠️  Git is already installed!"
         return
     fi
 
@@ -243,48 +245,52 @@ installGit() {
     echo git config --global user.name "$1"
     echo git config --global user.email "$2"
 
-    finish "Instalação do Git Concluída"
+    finish "Git installation complete"
 }
 
 installMaven() {
-    start "Iniciando instalação do Maven"
+    start "Starting Maven installation"
 
     checkIfIsInstalled "mvn"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Maven já está instalado!"
+        echo "${YELLOW}⚠️  Maven is already installed!"
         return
     fi
 
     echo sudo apt install maven -y
 
-    finish "Instalação do Maven Concluída"
+    finish "Installation of Maven Complete"
 }
 
 installDocker() {
-    start "Adicionando chave GPG oficial do Docker"
+    start "Starting Docker installation"
 
     checkIfIsInstalled "docker"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Docker já está instalado!"
+        echo "${YELLOW}⚠️  Docker is already installed!"
         return
     fi
-
-    start "Iniciando instalação do Docker"
 
     echo sudo apt install docker.io
     echo sudo systemctl start docker
     echo sudo systemctl enable docker
 
-    finish "Instalação do Docker Concluída"
+    finish "Docker installation complete"
 }
 
 installIntellij() {
-    start "Iniciando instalação do IntelliJ IDEA"
+    start "Starting installation of IntelliJ IDEA"
+
+    checkIfIsInstalled "idea"
+    if [ $? -eq 1 ]; then
+        echo "${YELLOW}⚠️  IntelliJ IDEA is already installed!"
+        return
+    fi
 
     echo sudo add-apt-repository ppa:ubuntuhandbook1/apps
     echo sudo apt update -qq
 
-    echo -e "\n${LIME_YELLOW}Selecione a versão do IntelliJ a ser instalado:"
+    echo -e "\n${LIME_YELLOW}Select the version of IntelliJ to be installed:"
 
     options=("Community" "Ultimate" "Quit")
 
@@ -292,94 +298,94 @@ installIntellij() {
         case $opt in
         "Community")
             echo sudo apt-get install intellij-idea-community -y
-            finish "Instalação do IntelliJ IDEA Community Concluída"
+            finish "IntelliJ IDEA Community installation completed"
             break
             ;;
         "Ultimate")
             echo sudo apt-get install intellij-idea-ultimate -y
-            finish "Instalação do IntelliJ IDEA Ultimate Concluída"
+            finish "IntelliJ IDEA Ultimate installation completed"
             break
             ;;
         "Quit")
-            echo -e "${RED}[ ✘️ ] Intellij não instalado!"
+            echo -e "${RED}[ ✘️ ] Intellij not installed!"
             break
             ;;
-        *) echo -e "${RED}Opção inválida, tente novamente!" ;;
+        *) echo -e "${RED}Invalid option, try again!" ;;
         esac
     done
 }
 
 installPostman() {
-    start "Iniciando instalação do Postman"
+    start "Starting Postman installation"
 
     checkIfIsInstalled "postman"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Postman já está instalado!"
+        echo "${YELLOW}⚠️  Postman is already installed!"
         return
     fi
 
     echo sudo snap install postman -y >/dev/null
 
-    finish "Instalação do Postman Concluída"
+    finish "Postman installation complete"
 }
 
 installMySql() {
-    start "Iniciando instalação do MySql"
+    start "Starting MySql installation"
 
     checkIfIsInstalled "mysql"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  MySql já está instalado!"
+        echo "${YELLOW}⚠️  MySql is already installed!"
         return
     fi
 
     echo sudo apt-get install mysql-server mysql-client -y
 
-    finish "Instalação do MySql Server Concluída"
+    finish "MySql Server installation complete"
 }
 
 installMySqlWorkbench() {
-    start "Iniciando instalação do MySql Workbench"
+    start "Starting installation of MySql Workbench"
 
     echo sudo apt install mysql-workbench -y >/dev/null
 
-    finish "Instalação do MySql Workbench Concluída"
+    finish "MySql Workbench Installation Complete"
 }
 
 installChrome() {
-    start "Iniciando instalação do Google Chrome"
+    start "Starting installation of Google Chrome"
 
     echo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb >/dev/null
     echo sudo dpkg -i google-chrome-stable_current_amd64.deb >/dev/null
 
-    finish "Instalação do Google Chrome Concluída"
+    finish "Google Chrome installation complete"
 }
 
 installSpotify() {
-    start "Iniciando instalação do Spotify"
+    start "Starting Spotify installation"
 
     checkIfIsInstalled "spotify"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Spotify já está instalado!"
+        echo "${YELLOW}⚠️  Spotify is already installed!"
         return
     fi
 
     echo snap install spotify >/dev/null
 
-    finish "Instalação do Spotify Concluída"
+    finish "Spotify Installation Complete"
 }
 
 installDiscord() {
-    start "Iniciando instalação do Discord"
+    start "Starting Discord installation"
 
     checkIfIsInstalled "discord"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Discord já está instalado!"
+        echo "${YELLOW}⚠️  Discord is already installed!"
         return
     fi
 
     echo sudo snap install discord >/dev/null
 
-    finish "Instalação do Discord Concluída"
+    finish "Discord Installation Complete"
 }
 
 checkIfIsInstalled() {
@@ -417,11 +423,11 @@ finishInstall() {
     echo sudo apt upgrade -qq
 
     echo sudo ufw enable
-    echo "Repositorio Atualizado."
-    echo "Sistema Atualizado."
-    echo "Programas instalados."
+    echo "Installed programs."
+    echo "Updated Repository."
+    echo "Updated System."
     echo "...................."
-    echo Pressione Enter para Continuar
+    echo Press Enter to Continue
     read #pausa
     exit
 }
