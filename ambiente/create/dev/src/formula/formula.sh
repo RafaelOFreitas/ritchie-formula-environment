@@ -23,7 +23,11 @@ runFormula() {
 
   case $SAMPLE_LIST in
   "Configuração completa")
+    installSPropertiesCommon
     installWget
+    installCertificates
+    installCurl
+    installGnupgAgent
     installSnap
     installChrome
     installSpotify
@@ -31,10 +35,14 @@ runFormula() {
     installVsCode
     installJdk
     installGit
+    installMaven
+    installDocker
     installIntellij
     installPostaman
     installMySql
     installMySqlWorkbench
+
+    finishInstall
     ;;
   "Selecionar programas")
     echo "Selecionar"
@@ -44,8 +52,8 @@ runFormula() {
 }
 
 sayHello() {
-  echo "sudo apt install lolcat"
-  echo "sudo apt install cowsay"
+  echo "sudo apt install lolcat -y"
+  echo "sudo apt install cowsay -y"
 
   cowsay -f gnu Configurando ambiente com RITCHIE! 🦸🚀 | lolcat
 
@@ -53,18 +61,50 @@ sayHello() {
   lsb_release -r
 }
 
+installSPropertiesCommon() {
+  start "Iniciando instalação de Properties Common"
+
+  echo "sudo apt install software-properties-common -y >/dev/null"
+
+  finish "Instalação de Properties Common Concluída"
+}
+
 installWget() {
   start "Iniciando instalação do GNU Wget"
 
-  echo "sudo apt install software-properties-common apt-transport-https wget >/dev/null"
+  echo "sudo apt install apt-transport-https wget -y >/dev/null"
 
   finish "Instalação do GNU Wget Concluída"
+}
+
+installCertificates() {
+  start "Iniciando instalação de Certificados"
+
+  echo "sudo apt install ca-certificates -y >/dev/null"
+
+  finish "Instalação de Certificados Concluída"
+}
+
+installCurl() {
+  start "Iniciando instalação do Curl Wget"
+
+  echo "sudo apt install curl -y >/dev/null"
+
+  finish "Instalação do Curl Concluída"
+}
+
+installGnupgAgent() {
+  start "Iniciando instalação do GNUPG Agent"
+
+  echo "sudo apt install gnupg-agent -y >/dev/null"
+
+  finish "Instalação do GNUPG Concluída"
 }
 
 installSnap() {
   start "Iniciando instalação do Snap"
 
-  echo "sudo apt install snapd >/dev/null"
+  echo "sudo apt install snapd -y >/dev/null"
 
   finish "Instalação do Snap Concluída"
 }
@@ -72,8 +112,7 @@ installSnap() {
 installGit() {
   start "Iniciando instalação do Git"
 
-  echo "sudo apt update -qq"
-  echo "sudo apt install git >/dev/null"
+  echo "sudo apt install git -y >/dev/null"
 
   finish "Instalação do Git Concluída"
 }
@@ -91,12 +130,12 @@ installIntellij() {
   select opt in "${options[@]}"; do
     case $opt in
     "Community")
-      echo "sudo apt-get install intellij-idea-community"
+      echo "sudo apt-get install intellij-idea-community -y"
       finish "Instalação do IntelliJ IDEA Community Concluída"
       break
       ;;
     "Ultimate")
-      echo "sudo apt-get install intellij-idea-ultimate"
+      echo "sudo apt-get install intellij-idea-ultimate -y"
       finish "Instalação do IntelliJ IDEA Ultimate Concluída"
       break
       ;;
@@ -123,17 +162,17 @@ installJdk() {
   select opt in "${options[@]}"; do
     case $opt in
     "8")
-      echo "sudo apt install openjdk-8-jdk"
+      echo "sudo apt install openjdk-8-jdk -y"
       finish "Instalação do JDK Concluída"
       break
       ;;
     "11")
-      echo "sudo apt install openjdk-11-jdk"
+      echo "sudo apt install openjdk-11-jdk -y"
       finish "Instalação do JDK Concluída"
       break
       ;;
     "12")
-      echo "sudo apt install openjdk-12-jdk"
+      echo "sudo apt install openjdk-12-jdk -y"
       finish "Instalação do JDK Concluída"
       break
       ;;
@@ -146,12 +185,32 @@ installJdk() {
   done
 }
 
+installMaven() {
+  start "Iniciando instalação do Maven"
+
+  echo "sudo apt install maven -y"
+
+  finish "Instalação do Maven Concluída"
+}
+
+installDocker() {
+  start "Adicionando chave GPG oficial do Docker"
+
+  echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"
+
+  start "Iniciando instalação do Docker"
+
+  echo "sudo apt-get install docker-ce docker-ce-cli containerd.io"
+
+  finish "Instalação do Docker Concluída"
+}
+
 installVsCode() {
   start "Iniciando instalação do Visual Studio Code"
 
   echo "wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -"
   echo "sudo add-apt-repository deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
-  echo "sudo apt install code"
+  echo "sudo apt install code -y"
 
   echo "sudo apt update -qq"
   echo "sudo apt upgrade -qq"
@@ -162,7 +221,7 @@ installVsCode() {
 installPostaman() {
   start "Iniciando instalação do Postman"
 
-  echo "sudo snap install postman >/dev/null"
+  echo "sudo snap install postman -y >/dev/null"
 
   finish "Instalação do Postman Concluída"
 }
@@ -170,9 +229,7 @@ installPostaman() {
 installMySql() {
   start "Iniciando instalação do MySql"
 
-  echo "sudo apt-get install mysql-server mysql-client"
-
-  echo "sudo apt update -qq"
+  echo "sudo apt-get install mysql-server mysql-client -y"
 
   finish "Instalação do MySql Server Concluída"
 }
@@ -180,7 +237,7 @@ installMySql() {
 installMySqlWorkbench() {
   start "Iniciando instalação do MySql Workbench"
 
-  echo "sudo apt install mysql-workbench >/dev/null"
+  echo "sudo apt install mysql-workbench -y>/dev/null"
 
   finish "Instalação do MySql Workbench Concluída"
 }
@@ -230,4 +287,18 @@ finish() {
   echo -ne "\\r${GREEN}[ ✔ ] $1\\n"
 
   tput cnorm -- normal
+}
+
+finishInstall() {
+  echo "sudo apt update -qq"
+  echo "sudo apt upgrade -qq"
+
+  ufw enable
+  echo "Repositorio Atualizado."
+  echo "Sistema Atualizado."
+  echo "Programas instalados."
+  echo "...................."
+  echo Pressione Enter para Continuar
+  read #pausa
+  exit
 }
