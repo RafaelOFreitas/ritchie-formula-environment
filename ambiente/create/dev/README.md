@@ -1,16 +1,16 @@
 # Ritchie Formula
 
-## command
+## Command
 
 ```bash
 rit ambiente create dev
 ```
 
-## description
+## Description
 
-Formula para automatizar a configuração de ambientes de desenvolvimento.
+Formula to automate the configuration of development environments.
 
-### Lista de Ferramentas instaladas.
+### List of installed tools
 
 + Properties Common
 + Wget
