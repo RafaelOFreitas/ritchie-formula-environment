@@ -62,7 +62,7 @@ sayHello() {
 
     cowsay -f gnu Setting up environment with RITCHIE! 🦸🚀 | lolcat
 
-    printf "\n${GREEN}OS version: %s\n"
+    printf "\n${CYAN}OS version: %s"
     lsb_release -r
 }
 
@@ -79,7 +79,7 @@ installWget() {
 
     checkIfIsInstalled "wget"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  GNU Wget is already installed!"
+        information "GNU Wget is already installed!"
         return
     fi
 
@@ -101,7 +101,7 @@ installCurl() {
 
     checkIfIsInstalled "curl"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Curl is already installed!"
+        information "Curl is already installed!"
         return
     fi
 
@@ -123,7 +123,7 @@ installSnap() {
 
     checkIfIsInstalled "snap"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Snap is already installed!"
+        information "Snap is already installed!"
         return
     fi
 
@@ -139,7 +139,7 @@ installJdk() {
 
     echo sudo apt update -qq
 
-    echo -e "\n${LIME_YELLOW}Select the version of Openjdk to be installed:"
+    echo -e "\n${YELLOW}Select the version of Openjdk to be installed:"
 
     options=("8" "11" "12" "Quit")
 
@@ -161,7 +161,7 @@ installJdk() {
             break
             ;;
         "Quit")
-            echo -e "${RED}[ ✘️ ] JDK not installed!"
+            echo -e "\n${RED}[ ❌ ] JDK not installed!"
             break
             ;;
         *) echo -e "${RED}Invalid option, try again!" ;;
@@ -174,7 +174,7 @@ installPython() {
 
     checkIfIsInstalled "python3"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Python3 is already installed!"
+        information "Python3 is already installed!"
         return
     fi
 
@@ -189,7 +189,7 @@ installNode() {
 
     checkIfIsInstalled "node"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Node is already installed!"
+        information "Node is already installed!"
         return
     fi
 
@@ -203,7 +203,7 @@ installNpm() {
 
     checkIfIsInstalled "npm"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Npm is already installed!"
+        information "Npm is already installed!"
         return
     fi
 
@@ -217,7 +217,7 @@ installVsCode() {
 
     checkIfIsInstalled "code"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Visual Studio Code is already installed!"
+        information "Visual Studio Code is already installed!"
         return
     fi
 
@@ -236,7 +236,7 @@ installGit() {
 
     checkIfIsInstalled "git"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Git is already installed!"
+        information "Git is already installed!"
         return
     fi
 
@@ -253,7 +253,7 @@ installMaven() {
 
     checkIfIsInstalled "mvn"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Maven is already installed!"
+        information "Maven is already installed!"
         return
     fi
 
@@ -267,7 +267,7 @@ installDocker() {
 
     checkIfIsInstalled "docker"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Docker is already installed!"
+        information "Docker is already installed!"
         return
     fi
 
@@ -283,14 +283,14 @@ installIntellij() {
 
     checkIfIsInstalled "idea"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  IntelliJ IDEA is already installed!"
+        information "IntelliJ IDEA is already installed!"
         return
     fi
 
     echo sudo add-apt-repository ppa:ubuntuhandbook1/apps
     echo sudo apt update -qq
 
-    echo -e "\n${LIME_YELLOW}Select the version of IntelliJ to be installed:"
+    echo -e "\n${YELLOW}Select the version of IntelliJ to be installed:"
 
     options=("Community" "Ultimate" "Quit")
 
@@ -307,7 +307,7 @@ installIntellij() {
             break
             ;;
         "Quit")
-            echo -e "${RED}[ ✘️ ] Intellij not installed!"
+            echo -e "${RED}[ ❌ ] Intellij not installed!"
             break
             ;;
         *) echo -e "${RED}Invalid option, try again!" ;;
@@ -320,7 +320,7 @@ installPostman() {
 
     checkIfIsInstalled "postman"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Postman is already installed!"
+        information "Postman is already installed!"
         return
     fi
 
@@ -334,7 +334,7 @@ installMySql() {
 
     checkIfIsInstalled "mysql"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  MySql is already installed!"
+        information "MySql is already installed!"
         return
     fi
 
@@ -365,7 +365,7 @@ installSpotify() {
 
     checkIfIsInstalled "spotify"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Spotify is already installed!"
+        information "Spotify is already installed!"
         return
     fi
 
@@ -379,7 +379,7 @@ installDiscord() {
 
     checkIfIsInstalled "discord"
     if [ $? -eq 1 ]; then
-        echo "${YELLOW}⚠️  Discord is already installed!"
+        information "Discord is already installed!"
         return
     fi
 
@@ -396,6 +396,10 @@ checkIfIsInstalled() {
     fi
 }
 
+information() {
+    printf "\n${LIME_YELLOW}[ ⚠️  ]  $1"
+}
+
 start() {
     FRAME=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏")
     FRAME_INTERVAL=0.1
@@ -403,7 +407,7 @@ start() {
     # tput civis -- invisible
 
     while ps -p $pid &>/dev/null; do
-        echo -ne "\\r${CYAN}[   ] $1 ..."
+        echo -ne "\\r\n${CYAN}[   ] $1 ..."
 
         for k in "${!FRAME[@]}"; do
             echo -ne "\\r[ ${FRAME[k]} ]"
@@ -413,7 +417,7 @@ start() {
 }
 
 finish() {
-    echo -ne "\\r${GREEN}[ ✔ ] $1\\n"
+    echo -ne "\\r\n${GREEN}[ ✅ ] $1"
 
     tput cnorm -- normal
 }
@@ -423,7 +427,7 @@ finishInstall() {
     echo sudo apt upgrade -qq
 
     echo sudo ufw enable
-    echo "Installed programs."
+    echo "\nInstalled programs."
     echo "Updated Repository."
     echo "Updated System."
     echo "...................."
