@@ -10,6 +10,10 @@ rit ambiente create dev
 
 Formula to automate the configuration of development environments.
 
+<div align="center">
+    <img src="ritchie-form.gif"/>
+</div>
+
 ### List of installed tools
 
 + Properties Common

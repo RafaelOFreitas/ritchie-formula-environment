@@ -459,7 +459,7 @@ checkIfIsInstalled() {
 }
 
 information() {
-    printf "\n${LIME_YELLOW}[ ⚠️  ]  $1"
+    printf "\n${LIME_YELLOW}[ ⚠️  ] $1"
 }
 
 start() {
