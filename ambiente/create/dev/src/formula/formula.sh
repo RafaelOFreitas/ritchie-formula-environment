@@ -9,7 +9,7 @@ runFormula() {
   # todo: Detect different versions of Linux
   case "$SYSTEM" in
   Linux*)
-    runConfigLinux $CONFIGURATION $GIT_NAME $GIT_EMAIL
+    runConfigLinux $SYSTEM $CONFIGURATION $GIT_NAME $GIT_EMAIL
     ;;
   Darwin*)
     config "MacOS"

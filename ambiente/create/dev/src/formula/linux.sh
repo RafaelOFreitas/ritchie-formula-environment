@@ -17,14 +17,14 @@ REVERSE=$(tput smso)
 UNDERLINE=$(tput smul)
 
 runConfigLinux() {
-    sayHello
+    sayHello $SYSTEM
 
     case $CONFIGURATION in
     "Complete configuration")
         completeConfiguration $GIT_NAME $GIT_EMAIL
         ;;
     "Select programs")
-        echo "Select"
+        selectConfiguration $GIT_NAME $GIT_EMAIL
         ;;
     *) echo -e "${RED}Invalid option, try again!" ;;
     esac
@@ -56,11 +56,73 @@ completeConfiguration() {
     finishInstall
 }
 
+selectConfiguration() {
+    start "Starting manual installation"
+
+    echo -e "\n${YELLOW}Select the tool you want to install:"
+
+    selections=(
+        "Properties Common"
+        "Wget"
+        "Curl"
+        "Gnupg Agent"
+        "Snap"
+        "Jdk"
+        "Python"
+        "Node"
+        "Npm"
+        "VsCode"
+        "Git"
+        "Maven"
+        "Docker"
+        "Intellij"
+        "Postman"
+        "MySql"
+        "MySql Workbench"
+        "Chrome"
+        "Spotify"
+        "Discord"
+        "Quit"
+    )
+
+    while opt=$(zenity --title="$title" --text="$prompt" --list \
+        --column="Tools" "${selections[@]}"); do
+
+        case "$opt" in
+        "${selections[0]}") installSPropertiesCommon ;;
+        "${selections[1]}") installWget ;;
+        "${selections[2]}") installCurl ;;
+        "${selections[3]}") installGnupgAgent ;;
+        "${selections[4]}") installSnap ;;
+        "${selections[5]}") installJdk ;;
+        "${selections[6]}") installPython ;;
+        "${selections[7]}") installNode ;;
+        "${selections[8]}") installNpm ;;
+        "${selections[9]}") installVsCode ;;
+        "${selections[10]}") installGit $GIT_NAME $GIT_EMAIL ;;
+        "${selections[11]}") installMaven ;;
+        "${selections[12]}") installDocker ;;
+        "${selections[13]}") installIntellij ;;
+        "${selections[14]}") installPostman ;;
+        "${selections[15]}") installMySql ;;
+        "${selections[16]}") installMySqlWorkbench ;;
+        "${selections[17]}") installChrome ;;
+        "${selections[18]}") installSpotify ;;
+        "${selections[19]}") installDiscord ;;
+        "${selections[20]}") break ;;
+        *) zenity --error --text="Invalid option. Try another one." ;;
+        esac
+
+    done
+
+    finishInstall
+}
+
 sayHello() {
     echo sudo apt install lolcat -y
     echo sudo apt install cowsay -y
 
-    cowsay -f gnu Setting up environment with RITCHIE! 🦸🚀 | lolcat
+    cowsay -f gnu Setting up environment $1 with RITCHIE! 🦸🚀 | lolcat
 
     printf "\n${CYAN}OS version: %s"
     lsb_release -r
