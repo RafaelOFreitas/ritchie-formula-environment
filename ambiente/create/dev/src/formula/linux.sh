@@ -489,7 +489,7 @@ finishInstall() {
     echo sudo apt upgrade -qq
 
     echo sudo ufw enable
-    echo "\nInstalled programs."
+    echo -ne "\\r\nInstalled programs.\n"
     echo "Updated Repository."
     echo "Updated System."
     echo "...................."
