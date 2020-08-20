@@ -203,7 +203,7 @@ installJdk() {
 
     sudo add-apt-repository ppa:linuxuprising/java -y
 
-    sudo apt-get update 2>&1 | tee $USER/log/tmp.log
+    sudo apt-get update -y 2>&1 | tee $USER/log/tmp.log
 
     echo -ne "${YELLOW}Select the version of Openjdk to be installed:"
 
@@ -245,7 +245,7 @@ installPython() {
         return
     fi
 
-    sudo add-apt-repository ppa:deadsnakes/ppa 2>&1 | tee $USER/log/tmp.log
+    sudo add-apt-repository ppa:deadsnakes/ppa -y 2>&1 | tee $USER/log/tmp.log
     sudo apt-get install python3.8 -y 2>&1 | tee $USER/log/tmp.log
 }
 
@@ -286,8 +286,7 @@ installVsCode() {
     sudo add-apt-repository deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main 2>&1 | tee $USER/log/tmp.log
     sudo apt-get install code -y
 
-    sudo apt-get update 2>&1 | tee $USER/log/tmp.log
-    sudo apt-get upgrade 2>&1 | tee $USER/log/tmp.log
+    sudo apt-get update -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installGit() {
@@ -316,7 +315,7 @@ installMaven() {
 
     sudo apt-get install maven -y 2>&1 | tee $USER/log/tmp.log
 }
-
+0
 installDocker() {
     start "Starting Docker installation" "Docker installation complete"
 
@@ -340,8 +339,8 @@ installIntellij() {
         return
     fi
 
-    sudo add-apt-repository ppa:ubuntuhandbook1/apps 2>&1 | tee $USER/log/tmp.log
-    sudo apt-get update 2>&1 | tee $USER/log/tmp.log
+    sudo add-apt-repository ppa:ubuntuhandbook1/apps -y 2>&1 | tee $USER/log/tmp.log
+    sudo apt-get update -y 2>&1 | tee $USER/log/tmp.log
 
     echo -ne "${YELLOW}Select the version of IntelliJ to be installed:"
 
@@ -380,7 +379,7 @@ installPostman() {
         return
     fi
 
-    sudo snap install postman -y 2>&1 | tee $USER/log/tmp.log
+    sudo snap install postman 2>&1 | tee $USER/log/tmp.log
 }
 
 installMySql() {
@@ -429,7 +428,7 @@ installSpotify() {
         return
     fi
 
-    snap install spotify -y 2>&1 | tee $USER/log/tmp.log
+    snap install spotify 2>&1 | tee $USER/log/tmp.log
 }
 
 installDiscord() {
@@ -441,7 +440,7 @@ installDiscord() {
         return
     fi
 
-    sudo snap install discord -y 2>&1 | tee $USER/log/tmp.log
+    sudo snap install discord 2>&1 | tee $USER/log/tmp.log
 }
 
 checkIfIsInstalled() {
