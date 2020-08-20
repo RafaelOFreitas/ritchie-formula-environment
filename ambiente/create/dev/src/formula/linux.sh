@@ -315,7 +315,7 @@ installMaven() {
 
     sudo apt-get install maven -y 2>&1 | tee $USER/log/tmp.log
 }
-0
+
 installDocker() {
     start "Starting Docker installation" "Docker installation complete"
 
@@ -444,10 +444,10 @@ installDiscord() {
 }
 
 checkIfIsInstalled() {
-    if ! command -v $1 2>&1 | tee $USER/log/tmp.log; then
-        return 0
-    else
+    if which -a "$1" 2>&1 | tee $USER/log/tmp.log; then
         return 1
+    else
+        return 0
     fi
 }
 
