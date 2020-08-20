@@ -444,7 +444,7 @@ installDiscord() {
 }
 
 checkIfIsInstalled() {
-    if which -a "$1" 2>&1 | tee $USER/log/tmp.log; then
+    if which -a $1; then
         return 1
     else
         return 0
