@@ -1,5 +1,11 @@
 #!/bin/sh
 
+USER=$(pwd)
+
+declare -rx CMDS=(
+    'sleep 1'
+)
+
 BLACK=$(tput setaf 0)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -18,6 +24,7 @@ UNDERLINE=$(tput smul)
 
 runConfigLinux() {
     sayHello $SYSTEM
+    createDirLog
 
     case $CONFIGURATION in
     "Complete configuration")
@@ -58,8 +65,9 @@ completeConfiguration() {
 
 selectConfiguration() {
     start "Starting manual installation"
+    clearLine 1
 
-    echo -e "\n${YELLOW}Select the tool you want to install:"
+    echo -ne "${YELLOW}Select the tool you want to install:"
 
     selections=(
         "Properties Common"
@@ -119,25 +127,30 @@ selectConfiguration() {
 }
 
 sayHello() {
-    sudo apt-get install lolcat >/dev/null
-    sudo apt-get install cowsay >/dev/null
+    checkIfIsInstalled "lolcat"
+    if [ $? -eq 0 ]; then
+        sudo apt-get install lolcat -y 2>&1 | tee $USER/log/tmp.log
+    fi
+
+    checkIfIsInstalled "cowsay"
+    if [ $? -eq 0 ]; then
+        sudo apt-get install cowsay -y 2>&1 | tee $USER/log/tmp.log
+    fi
 
     cowsay -f gnu Setting up environment $1 with RITCHIE! 🦸🚀 | lolcat
 
-    printf "\n${CYAN}OS version: %s"
+    printf "${CYAN}OS version: %s"
     lsb_release -r
 }
 
 installSPropertiesCommon() {
-    start "Starting installation of Properties Common"
+    start "Starting installation of Properties Common" "Properties Common installation complete"
 
-    sudo apt-get install software-properties-common >/dev/null
-
-    finish "Properties Common installation complete"
+    sudo apt-get install software-properties-common -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installWget() {
-    start "Starting installation of GNU Wget"
+    start "Starting installation of GNU Wget" "GNU Wget installation completed"
 
     checkIfIsInstalled "wget"
     if [ $? -eq 1 ]; then
@@ -145,21 +158,17 @@ installWget() {
         return
     fi
 
-    sudo apt-get install apt-transport-https wget >/dev/null
-
-    finish "GNU Wget installation completed"
+    sudo apt-get install apt-transport-https wget -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installCertificates() {
-    start "Starting installation of Certificates"
+    start "Starting installation of Certificates" "Certificate Installation Complete"
 
-    sudo apt-get install ca-certificates >/dev/null
-
-    finish "Certificate Installation Complete"
+    sudo apt-get install ca-certificates -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installCurl() {
-    start "Starting installation of Curl Wget"
+    start "Starting installation of Curl Wget" "Curl Installation Complete"
 
     checkIfIsInstalled "curl"
     if [ $? -eq 1 ]; then
@@ -167,21 +176,17 @@ installCurl() {
         return
     fi
 
-    sudo apt-get install curl >/dev/null
-
-    finish "Curl Installation Complete"
+    sudo apt-get install curl -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installGnupgAgent() {
-    start "Starting installation of the GNUPG Agent"
+    start "Starting installation of the GNUPG Agent" "GNUPG installation completed"
 
-    sudo apt-get install gnupg-agent >/dev/null
-
-    finish "GNUPG installation completed"
+    sudo apt-get install gnupg-agent -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installSnap() {
-    start "Starting Snap installation"
+    start "Starting Snap installation" "Snap Installation Complete"
 
     checkIfIsInstalled "snap"
     if [ $? -eq 1 ]; then
@@ -189,41 +194,41 @@ installSnap() {
         return
     fi
 
-    sudo apt-get install snapd >/dev/null
-
-    finish "Snap Installation Complete"
+    sudo apt-get install snapd -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installJdk() {
     start "Starting JDK installation"
+    clearLine 1
 
-    sudo add-apt-repository ppa:ubuntuhandbook1/apps >/dev/null
+    sudo add-apt-repository ppa:linuxuprising/java -y
 
-    sudo apt-get update -qq >/dev/null
+    sudo apt-get update 2>&1 | tee $USER/log/tmp.log
 
-    echo -e "\n${YELLOW}Select the version of Openjdk to be installed:"
+    echo -ne "${YELLOW}Select the version of Openjdk to be installed:"
 
     options=("8" "11" "12" "Quit")
 
     select opt in "${options[@]}"; do
         case $opt in
         "8")
-            sudo apt-get install openjdk-8-jdk >/dev/null
-            finish "JDK 8 installation completed"
+            start "Starting JDK 8 installation" "JDK 8 installation completed"
+            sudo apt-get install openjdk-8-jdk -y 2>&1 | tee $USER/log/tmp.log
             break
             ;;
         "11")
-            sudo apt-get install openjdk-11-jdk >/dev/null
-            finish "JDK 11 installation completed"
+            start "Starting JDK 11 installation" "JDK 11 installation completed"
+            sudo apt-get install openjdk-11-jdk -y 2>&1 | tee $USER/log/tmp.log
             break
             ;;
         "12")
-            sudo apt-get install openjdk-12-jdk >/dev/null
-            finish "JDK 12 installation completed"
+            start "Starting JDK 12 installation" "JDK 12 installation completed"
+            sudo apt-get install openjdk-12-jdk -y 2>&1 | tee $USER/log/tmp.log
             break
             ;;
         "Quit")
-            echo -e "\n${RED}[ ❌ ] JDK not installed!"
+            clearLine 1
+            echo -ne "${RED}[ ❌ ] JDK not installed!"
             break
             ;;
         *) echo -e "${RED}Invalid option, try again!" ;;
@@ -232,7 +237,7 @@ installJdk() {
 }
 
 installPython() {
-    start "Starting Python3 installation"
+    start "Starting Python3 installation" "Python3 installation completed"
 
     checkIfIsInstalled "python3"
     if [ $? -eq 1 ]; then
@@ -240,14 +245,12 @@ installPython() {
         return
     fi
 
-    sudo add-apt-repository ppa:deadsnakes/ppa >/dev/null
-    sudo apt-get install python3.8 >/dev/null
-
-    finish "Python3 installation completed"
+    sudo add-apt-repository ppa:deadsnakes/ppa 2>&1 | tee $USER/log/tmp.log
+    sudo apt-get install python3.8 -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installNode() {
-    start "Starting Node installation"
+    start "Starting Node installation" "Node installation complete"
 
     checkIfIsInstalled "node"
     if [ $? -eq 1 ]; then
@@ -255,13 +258,11 @@ installNode() {
         return
     fi
 
-    sudo apt-get install nodejs >/dev/null
-
-    finish "Node installation complete"
+    sudo apt-get install nodejs -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installNpm() {
-    start "Starting Npm installation"
+    start "Starting Npm installation" "Npm Installation Complete"
 
     checkIfIsInstalled "npm"
     if [ $? -eq 1 ]; then
@@ -269,13 +270,11 @@ installNpm() {
         return
     fi
 
-    sudo apt-get install npm >/dev/null
-
-    finish "Npm Installation Complete"
+    sudo apt-get install npm -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installVsCode() {
-    start "Starting Visual Studio Code installation"
+    start "Starting Visual Studio Code installation" "Visual Studio Code installation complete"
 
     checkIfIsInstalled "code"
     if [ $? -eq 1 ]; then
@@ -283,18 +282,16 @@ installVsCode() {
         return
     fi
 
-    wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add - >/dev/null
-    sudo add-apt-repository deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main >/dev/null
+    wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add - 2>&1 | tee $USER/log/tmp.log
+    sudo add-apt-repository deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main 2>&1 | tee $USER/log/tmp.log
     sudo apt-get install code -y
 
-    sudo apt-get update -qq >/dev/null
-    sudo apt-get upgrade -qq >/dev/null
-
-    finish "Visual Studio Code installation complete"
+    sudo apt-get update 2>&1 | tee $USER/log/tmp.log
+    sudo apt-get upgrade 2>&1 | tee $USER/log/tmp.log
 }
 
 installGit() {
-    start "Starting Git installation"
+    start "Starting Git installation" "Git installation complete"
 
     checkIfIsInstalled "git"
     if [ $? -eq 1 ]; then
@@ -302,16 +299,14 @@ installGit() {
         return
     fi
 
-    sudo apt-get install git >/dev/null
+    sudo apt-get install git -y 2>&1 | tee $USER/log/tmp.log
 
     git config --global user.name "$1"
     git config --global user.email "$2"
-
-    finish "Git installation complete"
 }
 
 installMaven() {
-    start "Starting Maven installation"
+    start "Starting Maven installation" "Installation of Maven Complete"
 
     checkIfIsInstalled "mvn"
     if [ $? -eq 1 ]; then
@@ -319,13 +314,11 @@ installMaven() {
         return
     fi
 
-    sudo apt-get install maven >/dev/null
-
-    finish "Installation of Maven Complete"
+    sudo apt-get install maven -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installDocker() {
-    start "Starting Docker installation"
+    start "Starting Docker installation" "Docker installation complete"
 
     checkIfIsInstalled "docker"
     if [ $? -eq 1 ]; then
@@ -333,11 +326,9 @@ installDocker() {
         return
     fi
 
-    sudo apt-get install docker.io >/dev/null
-    sudo systemctl start docker >/dev/null
-    sudo systemctl enable docker >/dev/null
-
-    finish "Docker installation complete"
+    sudo apt-get install docker.io -y 2>&1 | tee $USER/log/tmp.log
+    sudo systemctl start docker 2>&1 | tee $USER/log/tmp.log
+    sudo systemctl enable docker 2>&1 | tee $USER/log/tmp.log
 }
 
 installIntellij() {
@@ -349,26 +340,29 @@ installIntellij() {
         return
     fi
 
-    sudo add-apt-repository ppa:ubuntuhandbook1/apps >/dev/null
-    sudo apt-get update -qq >/dev/null
+    sudo add-apt-repository ppa:ubuntuhandbook1/apps 2>&1 | tee $USER/log/tmp.log
+    sudo apt-get update 2>&1 | tee $USER/log/tmp.log
 
-    echo -e "\n${YELLOW}Select the version of IntelliJ to be installed:"
+    echo -ne "${YELLOW}Select the version of IntelliJ to be installed:"
 
     options=("Community" "Ultimate" "Quit")
 
     select opt in "${options[@]}"; do
         case $opt in
         "Community")
-            sudo apt-get install intellij-idea-community >/dev/null
-            finish "IntelliJ IDEA Community installation completed"
+            clearLine 1
+            start "Starting installation of IntelliJ IDEA Community" "IntelliJ IDEA Community installation completed"
+            sudo apt-get install intellij-idea-community -y 2>&1 | tee $USER/log/tmp.log
             break
             ;;
         "Ultimate")
-            sudo apt-get install intellij-idea-ultimate >/dev/null
-            finish "IntelliJ IDEA Ultimate installation completed"
+            clearLine 1
+            start "Starting installation of IntelliJ IDEA" "IntelliJ IDEA Ultimate installation completed"
+            sudo apt-get install intellij-idea-ultimate -y 2>&1 | tee $USER/log/tmp.log
             break
             ;;
         "Quit")
+            clearLine 1
             echo -e "${RED}[ ❌ ] Intellij not installed!"
             break
             ;;
@@ -378,7 +372,7 @@ installIntellij() {
 }
 
 installPostman() {
-    start "Starting Postman installation"
+    start "Starting Postman installation" "Postman installation complete"
 
     checkIfIsInstalled "postman"
     if [ $? -eq 1 ]; then
@@ -386,13 +380,11 @@ installPostman() {
         return
     fi
 
-    sudo snap install postman >/dev/null
-
-    finish "Postman installation complete"
+    sudo snap install postman -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installMySql() {
-    start "Starting MySql installation"
+    start "Starting MySql installation" "MySql Server installation complete"
 
     checkIfIsInstalled "mysql"
     if [ $? -eq 1 ]; then
@@ -400,30 +392,36 @@ installMySql() {
         return
     fi
 
-    sudo apt-get install mysql-server mysql-client >/dev/null
-
-    finish "MySql Server installation complete"
+    sudo apt-get install mysql-server mysql-client -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installMySqlWorkbench() {
-    start "Starting installation of MySql Workbench"
+    start "Starting installation of MySql Workbench" "MySql Workbench Installation Complete"
 
-    sudo apt-get install mysql-workbench -y >/dev/null
+    checkIfIsInstalled "mysql-workbench"
+    if [ $? -eq 1 ]; then
+        information "MySql Workbench is already installed!"
+        return
+    fi
 
-    finish "MySql Workbench Installation Complete"
+    sudo apt-get install mysql-workbench -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installChrome() {
-    start "Starting installation of Google Chrome"
+    start "Starting installation of Google Chrome" "Google Chrome installation complete"
 
-    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb >/dev/null
-    sudo dpkg -i google-chrome-stable_current_amd64.deb >/dev/null
+    checkIfIsInstalled "google-chrome"
+    if [ $? -eq 1 ]; then
+        information "Google Chrome is already installed!"
+        return
+    fi
 
-    finish "Google Chrome installation complete"
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb 2>&1 | tee $USER/log/tmp.log
+    sudo dpkg -i google-chrome-stable_current_amd64.deb 2>&1 | tee $USER/log/tmp.log
 }
 
 installSpotify() {
-    start "Starting Spotify installation"
+    start "Starting Spotify installation" "Spotify Installation Complete"
 
     checkIfIsInstalled "spotify"
     if [ $? -eq 1 ]; then
@@ -431,13 +429,11 @@ installSpotify() {
         return
     fi
 
-    snap install spotify >/dev/null
-
-    finish "Spotify Installation Complete"
+    snap install spotify -y 2>&1 | tee $USER/log/tmp.log
 }
 
 installDiscord() {
-    start "Starting Discord installation"
+    start "Starting Discord installation" "Discord Installation Complete"
 
     checkIfIsInstalled "discord"
     if [ $? -eq 1 ]; then
@@ -445,13 +441,11 @@ installDiscord() {
         return
     fi
 
-    sudo snap install discord >/dev/null
-
-    finish "Discord Installation Complete"
+    sudo snap install discord -y 2>&1 | tee $USER/log/tmp.log
 }
 
 checkIfIsInstalled() {
-    if ! command -v $1 >/dev/null; then
+    if ! command -v $1 2>&1 | tee $USER/log/tmp.log; then
         return 0
     else
         return 1
@@ -459,41 +453,66 @@ checkIfIsInstalled() {
 }
 
 information() {
-    printf "\n${LIME_YELLOW}[ ⚠️  ] $1"
+    clearLine 2
+    echo -ne "\\r${LIME_YELLOW}[ ⚠️  ] $1\n"
 }
 
 start() {
     FRAME=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏")
     FRAME_INTERVAL=0.1
 
-    # tput civis -- invisible
+    local step=0
 
-    while ps -p $pid &>/dev/null; do
-        echo -ne "\\r\n${CYAN}[   ] $1 ..."
+    tput civis -- invisible
 
-        for k in "${!FRAME[@]}"; do
-            echo -ne "\\r[ ${FRAME[k]} ]"
-            sleep $FRAME_INTERVAL
+    while [ "$step" -lt "${#CMDS[@]}" ]; do
+        ${CMDS[$step]} &
+        pid=$!
+
+        while ps -p $pid &>/dev/null; do
+            echo -ne "\\r${CYAN}[   ] $1 ..."
+
+            for k in "${!FRAME[@]}"; do
+                echo -ne "\\r${CYAN}[ ${FRAME[k]} ]"
+                sleep $FRAME_INTERVAL
+            done
         done
-    done
-}
 
-finish() {
-    echo -ne "\\r\n${GREEN}[ ✅ ] $1"
+        tput dl1
+        echo -ne "\\r${GREEN}[ ✅ ] $2\\n"
+        step=$((step + 1))
+    done
 
     tput cnorm -- normal
 }
 
 finishInstall() {
-    sudo apt update -qq
-    sudo apt upgrade -qq
+    sudo apt-get update && sudo apt-get dist-upgrade -y && sudo apt-get clean && sudo apt-get autoremove -y
 
-    sudo ufw enable
-    echo -ne "\\r\nInstalled programs.\n"
-    echo "Updated Repository."
-    echo "Updated System."
-    echo "...................."
-    echo Press Enter to Continue
-    read #pausa
-    exit
+    if [ $? -ne 0 ]; then
+        echo -ne "${RED}Erro ao atualizar sistema!"
+    else
+        echo -ne "${GREEN}Installed programs."
+        echo "Updated Repository."
+        echo "Updated System."
+        echo "...................."
+        echo Press Enter to Continue
+        read #pausa
+        exit
+    fi
+}
+
+createDirLog() {
+    if [ ! -d log ]; then
+        mkdir $USER/log
+    else
+        rm $USER/log/tmp.log
+    fi
+}
+
+clearLine() {
+    for counter in $(seq 1 $1); do
+        tput cuu1
+        tput dl1
+    done
 }
