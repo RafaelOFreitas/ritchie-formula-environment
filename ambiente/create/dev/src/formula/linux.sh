@@ -283,10 +283,9 @@ installVsCode() {
     fi
 
     wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add - 2>&1 | tee $USER/log/tmp.log
-    sudo add-apt-repository deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main 2>&1 | tee $USER/log/tmp.log
-    sudo apt-get install code -y
-
+    sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" 2>&1 | tee $USER/log/tmp.log
     sudo apt-get update -y 2>&1 | tee $USER/log/tmp.log
+    sudo apt-get install code -y
 }
 
 installGit() {
@@ -339,7 +338,7 @@ installIntellij() {
         return
     fi
 
-    sudo add-apt-repository ppa:ubuntuhandbook1/apps -y 2>&1 | tee $USER/log/tmp.log
+    Sudo apt-add-repository ppa:mmk2410/intellij-idea -y 2>&1 | tee $USER/log/tmp.log
     sudo apt-get update -y 2>&1 | tee $USER/log/tmp.log
 
     echo -ne "${YELLOW}Select the version of IntelliJ to be installed:"
