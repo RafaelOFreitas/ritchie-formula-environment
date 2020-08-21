@@ -1,4 +1,5 @@
 {
-	"short": "short help placeholder for environment",
-	"long": "long help placeholder for environment used by index page and -h"
-}
+	"long": "Manipulate environment objects",
+	"short": "Manipulate environment objects"
+  }
+  
